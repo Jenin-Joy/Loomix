@@ -1,0 +1,57 @@
+{% extends 'Admin/Head.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto mt-8 px-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Stock Management</h1>
+        <div class="flex justify-center">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mb-8">
+                <form action="" method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="flex items-center space-x-4">
+                        <label for="txt_stock" class="text-lg font-medium text-gray-700 w-24">Stock</label>
+                        <input type="text" name="txt_stock" id="txt_stock" placeholder="Enter stock quantity" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300">
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" name="btn_submit" class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="flex justify-center">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-200 text-gray-700">
+                                <th class="py-3 px-4 text-left font-semibold">Sl No</th>
+                                <th class="py-3 px-4 text-left font-semibold">Stock</th>
+                                <th class="py-3 px-4 text-left font-semibold">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in data %}
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">{{forloop.counter}}</td>
+                                <td class="py-3 px-4">{{i.stock_quantity}}</td>
+                                <td class="py-3 px-4">
+                                    <a href="{% url 'Admin:delstock' i.id %}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

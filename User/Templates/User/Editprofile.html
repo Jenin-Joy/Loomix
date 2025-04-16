@@ -1,0 +1,51 @@
+{% extends 'User/Head.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Profile</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td><label for="name">Name:</label></td>
+                    <td><input type="text" name="name" id="name" value="{{user.reg_name}}" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email:</label></td>
+                    <td><input type="email" name="email" id="email" value="{{user.reg_email}}" required></td>
+                </tr>
+                <tr>
+                    <td><label for="contact">Contact:</label></td>
+                    <td><input type="text" name="contact" id="contact" value="{{user.reg_contact}}" required></td>
+                </tr>
+                <tr>
+                    <td><label for="address">Address:</label></td>
+                    <td><textarea name="address" id="address" required>{{user.reg_address}}</textarea></td>
+                </tr>
+                <tr align="center">
+                    <td colspan="2"><input type="submit" value="Edit"></td>
+                </tr>
+            </table>
+        </form>
+
+        {% if msg %}
+        <div class="form-message">
+            <script>
+                alert("{{ msg }}");
+                window.location = "{% url 'User:EditProfile' %}";
+            </script>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock content %}
+

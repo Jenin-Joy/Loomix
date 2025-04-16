@@ -1,0 +1,53 @@
+{% extends 'Admin/Head.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Districts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto mt-8 px-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">District Management</h1>
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <form action="" method="post" class="space-y-4">
+                {% csrf_token %}
+                <div class="flex items-center space-x-4">
+                    <label for="district" class="text-lg font-medium text-gray-700 w-24">District</label>
+                    <input type="text" name="district" id="district" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">Add</button>
+                </div>
+            </form>
+        </div>
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-700">
+                            <th class="py-3 px-4 text-left font-semibold">Sl No</th>
+                            <th class="py-3 px-4 text-left font-semibold">District</th>
+                            <th class="py-3 px-4 text-left font-semibold">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in result %}
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4">{{forloop.counter}}</td>
+                            <td class="py-3 px-4">{{i.district_name}}</td>
+                            <td class="py-3 px-4">
+                                <a href="{% url 'Admin:deldis' i.id %}" class="text-red-600 hover:text-red-800 font-medium">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

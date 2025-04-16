@@ -1,0 +1,33 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="result">
+    {% for i,j in product %}
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all hover:shadow-xl">
+        <div class="relative">
+            <img src="{{i.product_photo.url}}" class="card-img w-full h-48 object-cover rounded-t-lg" alt="Product Image">
+        </div>
+        <div class="p-4">
+            <h5 class="text-lg font-bold text-gray-800">{{i.product_name}}</h5>
+            <p class="text-sm text-gray-600 mt-2">
+                <strong>Total Price:</strong> ${{i.product_total_price}}<br>
+                <strong>Offer Price:</strong> ${{i.product_price}}<br>
+                <strong>Category:</strong> {{i.category.category_name}}
+            </p>
+            <div class="flex mt-2 space-x-1">
+                {% for k in ar %}
+                {% if k <= j %}
+                <i class="fa-solid fa-star text-warning text-sm"></i>
+                {% else %}
+                <i class="fa-solid fa-star star-light text-sm"></i>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% if i.total_stock <= 0 %}
+            <div class="block mt-4 w-full bg-red-100 text-red-600 text-center py-2 rounded-md font-semibold border border-red-300">Out of Stock</div>
+            {% else %}
+            <a href="{% url 'User:addcart' i.id %}" class="block mt-4 w-full bg-blue-600 text-white text-center py-2 rounded-md font-semibold hover:bg-blue-700 transition duration-300">Add to Cart</a>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center text-gray-600 py-8">No products found.</div>
+    {% endfor %}
+</div>

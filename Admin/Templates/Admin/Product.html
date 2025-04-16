@@ -1,0 +1,86 @@
+{% extends 'Admin/Head.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto mt-8 px-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Product Management</h1>
+        <div class="flex justify-center">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mb-8">
+                <form action="" method="post" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="flex items-center space-x-4">
+                        <label for="txt_name" class="text-lg font-medium text-gray-700 w-32">Product</label>
+                        <input type="text" name="txt_name" id="txt_name" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300">
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <label for="txt_total_price" class="text-lg font-medium text-gray-700 w-32">Total Price</label>
+                        <input type="text" name="txt_total_price" id="txt_total_price" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300">
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <label for="txt_price" class="text-lg font-medium text-gray-700 w-32">Offer Price</label>
+                        <input type="text" name="txt_price" id="txt_price" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300">
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <label for="file_photo" class="text-lg font-medium text-gray-700 w-32">Photo</label>
+                        <input type="file" name="file_photo" id="file_photo" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300">
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <label for="sel_category" class="text-lg font-medium text-gray-700 w-32">Category</label>
+                        <select name="sel_category" id="sel_category" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300">
+                            <option value="">--Select--</option>
+                            {% for i in category %}
+                            <option value="{{i.id}}">{{i.category_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-700">
+                            <th class="py-3 px-4 text-left font-semibold">#</th>
+                            <th class="py-3 px-4 text-left font-semibold">Name</th>
+                            <th class="py-3 px-4 text-left font-semibold">Photo</th>
+                            <th class="py-3 px-4 text-left font-semibold">Total Price</th>
+                            <th class="py-3 px-4 text-left font-semibold">Offer Price</th>
+                            <th class="py-3 px-4 text-left font-semibold">Category</th>
+                            <th class="py-3 px-4 text-left font-semibold">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in product %}
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4">{{forloop.counter}}</td>
+                            <td class="py-3 px-4">{{i.product_name}}</td>
+                            <td class="py-3 px-4">
+                                <img src="{{i.product_photo.url}}" class="w-24 h-24 object-cover rounded-md" alt="{{i.product_name}}">
+                            </td>
+                            <td class="py-3 px-4">{{i.product_total_price}}</td>
+                            <td class="py-3 px-4">{{i.product_price}}</td>
+                            <td class="py-3 px-4">{{i.category.category_name}}</td>
+                            <td class="py-3 px-4">
+                                <a href="{% url 'Admin:Stock' i.id %}" class="text-blue-600 hover:text-blue-800 font-medium">Stock</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

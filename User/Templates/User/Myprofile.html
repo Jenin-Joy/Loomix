@@ -1,0 +1,93 @@
+{% extends 'User/Head.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        
+
+        form
+        {
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        td {
+            padding: 12px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            width: 30%;
+        }
+
+        td:last-child {
+            color: #333;
+        }
+        </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+        <table align="center">
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <img src="{{ user.user_photo.url }}" alt="User Photo">
+                </td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{ user.reg_name }}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{ user.reg_email }}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>{{ user.reg_contact }}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>{{ user.reg_address }}</td>
+            </tr>
+            <tr>
+                <td>Place</td>
+                <td>{{ user.place.place_name }}</td>
+            </tr>
+        </table>
+        <div class="action-links">
+            <a href="{% url 'User:Editprofile' %}">Edit Profile</a>
+            <a href="{% url 'User:Changepassword' %}">Change Password</a>
+        </div>
+    </div>
+
+    {% if msg %}
+    <div class="form-message">
+        <script>
+            alert("{{ msg }}");
+            window.location = "{% url 'User:profile' %}";
+        </script>
+    </div>
+    {% endif %}
+</body>
+
+</html>
+{% endblock content %}
