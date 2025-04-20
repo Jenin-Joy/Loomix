@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from Admin.models import *
 from User.models import *
+from django.db.models import Sum
 
 
 # Create your views here.
@@ -150,21 +151,57 @@ def cedit(request,id):
 def product(request):
     category=tbl_category.objects.all()
     pro=tbl_product.objects.all()
+    for i in pro:
+        total_stock = tbl_stock.objects.filter(product=i.id).aggregate(total=Sum('stock_quantity'))['total']
+        total_cart = tbl_cart.objects.filter(product=i.id, cart_status=0).aggregate(total=Sum('cart_quantity'))['total']
+        # print(total_stock)
+        # print(total_cart)
+        if total_stock is None:
+            total_stock = 0
+        if total_cart is None:
+            total_cart = 0
+        total =  total_stock - total_cart
+        i.total_stock = total
     if request.method=="POST":
         tbl_product.objects.create(
             product_name=request.POST.get("txt_name"),
             product_price=request.POST.get("txt_price"),
             product_photo=request.FILES.get("file_photo"),
             product_total_price=request.POST.get("txt_total_price"),
+            product_description=request.POST.get("txt_description"),
             category=tbl_category.objects.get(id=request.POST.get("sel_category")),
         )
         return redirect("Admin:product")
     else:
         return render(request,"Admin/Product.html",{'category':category,'product':pro})
 
+def size(request):
+    size=tbl_size.objects.all()
+    if request.method=="POST":
+        tbl_size.objects.create(size_name=request.POST.get("txt_size"))
+        return redirect("Admin:size")
+    else:
+        return render(request,"Admin/Size.html",{'size':size})
+
+def deletesize(request,id):
+    tbl_size.objects.get(id=id).delete()
+    return redirect("Admin:size")
+
+def addsize(request,id):
+    size=tbl_size.objects.all()
+    productsize=tbl_productsize.objects.filter(product=id)
+    if request.method=="POST":
+        tbl_productsize.objects.create(product=tbl_product.objects.get(id=id),size=tbl_size.objects.get(id=request.POST.get("sel_size")))
+        return redirect("Admin:addsize",id)
+    else:
+        return render(request,"Admin/Addsize.html",{'size':size,'productsize':productsize,"id":id})
+
+def deleteaddsize(request,id,sizeid):
+    tbl_productsize.objects.get(id=id).delete()
+    return redirect("Admin:addsize",sizeid)
 
 def Stock(request,id):
-    data=tbl_stock.objects.all()
+    data=tbl_stock.objects.filter(product=id)
     if request.method=="POST":
         name=request.POST.get("txt_stock")
         tbl_stock.objects.create(stock_quantity=name,product=tbl_product.objects.get(id=id))

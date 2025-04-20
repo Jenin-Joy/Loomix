@@ -15,8 +15,12 @@
         <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">{{i.booking_date}}</h2>
             <div class="mb-4">
-                <p class="text-lg text-gray-600"><strong>User Name:</strong> {{i.user.user_name}}</p>
+                <p class="text-lg text-gray-600"><strong>Name:</strong> {{i.user.reg_name}}</p>
+                <p class="text-lg text-gray-600"><strong>Contact:</strong> {{i.user.reg_contact}}</p>
+                <p class="text-lg text-gray-600"><strong>Address:</strong> {{i.user.reg_address}}</p>
                 <p class="text-lg text-gray-600"><strong>Amount:</strong> ${{i.booking_amount}}</p>
+                <p class="text-lg text-gray-600"><strong>Status:</strong> 
+                    {% if i.booking_status == 2 %}Paid{% else %}Pending{% endif %}</p>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full border-collapse bg-white rounded-lg shadow-sm">
@@ -26,6 +30,7 @@
                             <th class="py-3 px-4 text-left font-semibold">Product</th>
                             <th class="py-3 px-4 text-left font-semibold">Name</th>
                             <th class="py-3 px-4 text-left font-semibold">Quantity</th>
+                            <th class="py-3 px-4 text-left font-semibold">Size</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +42,7 @@
                             </td>
                             <td class="py-3 px-4">{{j.product.product_name}}</td>
                             <td class="py-3 px-4">{{j.cart_quantity}}</td>
+                            <td class="py-3 px-4">{{j.size.size_name}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

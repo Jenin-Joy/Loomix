@@ -12,8 +12,8 @@ urlpatterns=[
     path('Mycart/',views.Mycart, name='Mycart'),  # 
     path("DelCart/<int:did>", views.DelCart,name="delcart"),
     path("CartQty/", views.CartQty,name="cartqty"),
-
-    path("payment/",views.payment,name="payment"),
+    path("sizeupdate/", views.sizeupdate,name="sizeupdate"),
+    path("payment/<int:bid>",views.payment,name="payment"),
     path('loader/',views.loader, name='loader'),
     path('paymentsuc/',views.paymentsuc, name='paymentsuc'),
     path("mybooking/",views.mybooking,name="mybooking"), #

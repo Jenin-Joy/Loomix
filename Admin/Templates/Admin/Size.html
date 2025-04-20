@@ -1,0 +1,113 @@
+{% extends 'Admin/Head.html' %}
+{% block content %}
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #04142c;
+        margin-bottom: 20px;
+        border-left: 5px solid #a3eaff;
+        padding-left: 10px;
+    }
+
+    form input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    form button {
+        background-color: #04142c;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    form button:hover {
+        background-color: #062e5c;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #a3eaff;
+        color: #04142c;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        color: #888;
+    }
+</style>
+
+<div class="container">
+    <h2>Add New Size</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="txt_size">Size Name</label>
+        <input type="text" id="txt_size" name="txt_size" placeholder="Enter size name..." required>
+        <button type="submit">Add Size</button>
+    </form>
+
+    <h2>Available Sizes</h2>
+    {% if size %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Size Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in size %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ s.size_name }}</td>
+                <td><a href="{% url 'Admin:deletesize' s.id %}" class="text-red-600 hover:text-red-800 font-medium">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-data">No sizes found.</div>
+    {% endif %}
+</div>
+{% endblock content %}

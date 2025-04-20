@@ -107,7 +107,7 @@ def Mycart(request):
         bookingdata.booking_amount=request.POST.get("carttotalamt")
         bookingdata.booking_status=1
         bookingdata.save()
-        return redirect("User:payment")
+        return redirect("User:payment",request.session["bookingid"])
     else:
         bookcount = tbl_booking.objects.filter(user=request.session["uid"],booking_status=0).count()
         
@@ -151,9 +151,17 @@ def CartQty(request):
    cartdata.save()
    return redirect("User:Mycart")  
 
+def sizeupdate(request):
+    size=request.GET.get('size')
+    cartid=request.GET.get('cartid')
+    cartdata=tbl_cart.objects.get(id=cartid)
+    cartdata.size=tbl_size.objects.get(id=size)
+    cartdata.save()
+    return redirect("User:Mycart")
 
-def payment(request):
-    bookingdata=tbl_booking.objects.get(id=request.session["bookingid"])
+
+def payment(request,bid):
+    bookingdata=tbl_booking.objects.get(id=bid)
     amt=bookingdata.booking_amount
     if request.method=="POST":
         bookingdata.booking_status=2
@@ -231,8 +239,40 @@ def ajaxproduct(request):
     parry=[]
     avg=0
     ar=[1,2,3,4,5]
-    if request.GET.get("did") == "":
-        product = tbl_product.objects.all()
+    if request.GET.get("did") != "" and request.GET.get("search") != "":
+        product = tbl_product.objects.filter(category=request.GET.get("did"),product_name__icontains=request.GET.get("search"))
+        for i in product:
+            tot=0
+            ratecount=tbl_rating.objects.filter(product=i.id).count()
+            if ratecount>0:
+                ratedata=tbl_rating.objects.filter(product=i.id)
+                for j in ratedata:
+                    tot=tot+j.rating_data
+                    avg=tot//ratecount
+                    #print(avg)
+                parry.append(avg)
+            else:
+                parry.append(0)
+            # print(parry)
+        datas=zip(product,parry)
+    elif request.GET.get("did") != "":
+        product = tbl_product.objects.filter(category=request.GET.get("did"))
+        for i in product:
+            tot=0
+            ratecount=tbl_rating.objects.filter(product=i.id).count()
+            if ratecount>0:
+                ratedata=tbl_rating.objects.filter(product=i.id)
+                for j in ratedata:
+                    tot=tot+j.rating_data
+                    avg=tot//ratecount
+                    #print(avg)
+                parry.append(avg)
+            else:
+                parry.append(0)
+            # print(parry)
+        datas=zip(product,parry)
+    elif request.GET.get("search") != "":
+        product = tbl_product.objects.filter(product_name__icontains=request.GET.get("search"))
         for i in product:
             tot=0
             ratecount=tbl_rating.objects.filter(product=i.id).count()
@@ -248,7 +288,7 @@ def ajaxproduct(request):
             # print(parry)
         datas=zip(product,parry)
     else:
-        product = tbl_product.objects.filter(category=request.GET.get("did"))
+        product = tbl_product.objects.all()
         for i in product:
             tot=0
             ratecount=tbl_rating.objects.filter(product=i.id).count()

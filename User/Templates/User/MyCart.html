@@ -12,20 +12,24 @@
 
             .product-image {
                 float: left;
-                width: 20%;
+                width: 19%;
             }
 
             .product-details {
                 float: left;
-                width: 37%;
+                width: 29%;
             }
 
             .product-price {
                 float: left;
-                width: 12%;
+                width: 11%;
             }
 
             .product-quantity {
+                float: left;
+                width: 10%;
+            }
+            .product-size {
                 float: left;
                 width: 10%;
             }
@@ -219,6 +223,9 @@
                 .product-quantity {
                     width: 100px;
                 }
+                .product-size {
+                    width: 100px;
+                }
                 .product-quantity input {
                     margin-left: 20px;
                 }
@@ -324,6 +331,7 @@
              
                  <label class="product-price">Price</label>
                 <label class="product-quantity">Quantity</label>
+                <label class="product-size">Size</label>
                 <label class="product-removal">Remove</label>
                 <label class="product-line-price">Total</label>
             </div>
@@ -342,6 +350,14 @@
                 <input alt="{{i.id}}" type="number" value="{{i.cart_quantity}}" min="1"  max="{{i.total_stock}}"  id="qty" class="qty"/>
 
             </div>
+            <div class="product-size">
+                <select name="sel_size" id="sel_size" class="size" required alt="{{i.id}}">
+                    <option value="">...Select...</option>
+                    {% for s in i.product.tbl_productsize_set.all %}
+                <option value="{{s.size.id}}" {% if i.size == s.size %} selected {% endif %}>{{s.size.size_name}}</option>
+                {% endfor %}
+                </select>
+            </div>
             <div class="product-removal">
                 <div class="product-title"><a href="{% url 'User:delcart' i.id  %}" >Remove</a></div>
 
@@ -359,14 +375,6 @@
                     <input type="hidden" id="cart-totalamt" name="carttotalamt" value=""/>
                 </div>
             </div>
-            <span >COD</span>
-            <label class="switch2 switch2-checked">
-
-                <input type="checkbox" name="cb_checkout" checked />
-                <div></div>
-
-            </label>
-            <span>Card Payment</span>
             <button type="submit" class="checkout" name="btn_checkout">Checkout</button>
 
 
@@ -463,6 +471,23 @@
              $.ajax({
                  url: ur,
                  data: { QTY: qid, ALT: cid },
+                 
+                 
+             });
+             window.location="{% url 'User:Mycart' %}";
+         });
+
+         $(".size").change(function () {
+             var qid = $(this).val();
+             var cid = $(this).attr('alt');
+             //alert(cid);
+             //alert(cid);
+             console.log(qid,cid);
+             
+             var ur = "{% url 'User:sizeupdate' %}";
+             $.ajax({
+                 url: ur,
+                 data: { size: qid, cartid: cid },
                  
                  
              });

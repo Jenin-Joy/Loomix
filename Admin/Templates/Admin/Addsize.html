@@ -1,0 +1,115 @@
+{% extends 'Admin/Head.html' %}
+{% block content %}
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #04142c;
+        margin-bottom: 20px;
+        border-left: 5px solid #a3eaff;
+        padding-left: 10px;
+    }
+
+    form select, form button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    form button {
+        background-color: #04142c;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    form button:hover {
+        background-color: #062e5c;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+    }
+
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #a3eaff;
+        color: #04142c;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        color: #888;
+    }
+</style>
+
+<div class="container">
+    <h2>Add Size to Product</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="sel_size">Select Size:</label>
+        <select id="sel_size" name="sel_size" required>
+            <option value="">-- Choose Size --</option>
+            {% for s in size %}
+                <option value="{{ s.id }}">{{ s.size_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add Size</button>
+    </form>
+
+    <h2>Product Sizes</h2>
+    {% if productsize %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Size Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in productsize %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ s.size.size_name }}</td>
+                <td><a href="{% url 'Admin:deleteaddsize' s.id id %}" class="text-red-600 hover:text-red-800 font-medium">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-data">No sizes added yet for this product.</div>
+    {% endif %}
+</div>
+{% endblock content %}

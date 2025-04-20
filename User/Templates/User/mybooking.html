@@ -85,6 +85,13 @@
             <div class="booking-header">
                 <span>Booking Date: {{ i.booking_date }}</span>
                 <span>Booking Amount: {{ i.booking_amount }}</span>
+                <span>Status: 
+                    {% if i.booking_status == 2 %}
+                    Paid
+                    {% else %}
+                    <a href="{% url 'User:payment' i.id %}">Payment</a>
+                    {% endif %}
+                </span>
             </div>
             
             <table class="products-table">
@@ -94,6 +101,7 @@
                     <th>Name</th>
                     <th>Price</th>
                     <th>Quantity</th>
+                    <th>Size</th>
                     <th>Action</th>
                 </tr>
                 {% for cart in i.tbl_cart_set.all %}
@@ -105,6 +113,7 @@
                     <td>{{ cart.product.product_name }}</td>
                     <td>{{ cart.product.product_price }}</td>
                     <td>{{ cart.cart_quantity }}</td>
+                    <td>{{ cart.size.size_name }}</td>
                     <td><a href="{% url 'User:rating' cart.product.id %}" class="rate-link">Rate</a></td>
                 </tr>
                 {% endfor %}

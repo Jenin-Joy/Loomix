@@ -39,14 +39,28 @@
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto mt-8 px-4">
-        <div class="flex items-center justify-center mb-6">
+        <div class="flex items-center justify-center mb-6 gap-4">
             <label for="category" class="text-lg font-medium text-gray-700 mr-3">Category:</label>
-            <select name="sel_category" id="sel_category" class="w-64 px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+            <select name="sel_category" id="sel_category" onchange="searchProduct()" class="w-64 px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
                 <option value="">--Select--</option>
                 {% for i in categorys %}
                 <option value="{{i.id}}">{{i.category_name}}</option>
                 {% endfor %}
             </select>
+
+            <div class="relative w-64">
+                <input 
+                    type="text" 
+                    name="search_pdt" 
+                    id="search_pdt" 
+                    onkeyup="searchProduct()"
+                    placeholder="  Search products..." 
+                    class="w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 pl-10"
+                >
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="fas fa-search text-gray-400"></i>
+                </span>
+            </div>
         </div>
         <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Our Products</h2>
         <div id="result">
@@ -70,6 +84,13 @@
                             {% else %}
                             <i class="fa-solid fa-star star-light text-sm"></i>
                             {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                            {% for s in i.tbl_productsize_set.all %}
+                            <span class="inline-block bg-gray-100 text-gray-700 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-300 hover:bg-blue-100 hover:text-blue-700 transition duration-300">
+                                {{s.size.size_name}}
+                            </span>
                             {% endfor %}
                         </div>
                         {% if i.total_stock <= 0 %}
@@ -96,16 +117,17 @@
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        $("#sel_category").change(function () {
-            var did = $(this).val();
+        function searchProduct() {
+            var did = $("#sel_category").val();
+            var search = $("#search_pdt").val();
             var ur = "{% url 'User:ajaxproduct' %}";
             $.ajax({
                 url: ur,
-                data: { did: did },
+                data: { did: did, search: search },
                 success: function (data) {
                     $("#result").html(data);
                 },
             });
-        });
+        }
     </script>
 {% endblock content %}

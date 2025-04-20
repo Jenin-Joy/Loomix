@@ -15,6 +15,7 @@ class tbl_cart(models.Model):
     cart_status=models.IntegerField(default=0)
     booking=models.ForeignKey(tbl_booking,on_delete=models.CASCADE)
     product=models.ForeignKey(tbl_product,on_delete=models.CASCADE)
+    size = models.ForeignKey(tbl_size, on_delete=models.CASCADE, null=True)
 
 class tbl_rating(models.Model):
     rating_data=models.IntegerField()
