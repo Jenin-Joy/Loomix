@@ -32,6 +32,8 @@ urlpatterns = [
   path('delstock/<int:did>',views.delstock,name='delstock'),
   path('logout/',views.logout,name='logout'),
   path('viewbooking/',views.viewbooking,name='viewbooking'),
+  path('viewcomplaint/',views.viewcomplaint,name='viewcomplaint'),
+  path('reply/<int:id>',views.reply,name='reply'),
   
 
   

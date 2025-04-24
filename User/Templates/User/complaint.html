@@ -5,21 +5,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Complaint</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        form {
+            background: #ffffff;
+            padding: 20px;
+            margin: 0 auto 30px auto;
+            border-radius: 8px;
+            max-width: 600px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form table {
+            width: 100%;
+        }
+
+        form td {
+            padding: 10px;
+            vertical-align: top;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        table[border="1"] {
+            width: 90%;
+            margin: auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        table[border="1"] th,
+        table[border="1"] td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        table[border="1"] tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table[border="1"] th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <form method="post">
+
+    <h2>Submit a Complaint</h2>
+    <form action="" method="post">
         {% csrf_token %}
-        <h3>ViewComplaints</h3>
-        <table border="1">
-            
+        <table>
             <tr>
-                <td>sl</td>
-                <td>Title</td>
-                <td>Content</td>
-                <td>UserName</td>
-                <td>Date</td>
-              <td><a href="{% url 'Admin:areply' i.id %}">Reply</a></td>
+                <td><label for="title">Title</label></td>
+                <td><input type="text" name="title" id="title" required></td>
             </tr>
-        </table> </form></body></html>
-        {% endblock content %}
+            <tr>
+                <td><label for="content">Content</label></td>
+                <td><textarea name="content" id="content" required></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;"><input type="submit" value="Add"></td>
+            </tr>
+        </table>
+    </form>
+
+    <h2>Submitted Complaints</h2>
+    <table border="1">
+        <tr>
+            <th>Sl</th>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Date</th>
+            <th>Reply</th>
+        </tr>
+        {% for i in complaint %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.title }}</td>
+            <td>{{ i.content }}</td>
+            <td>{{ i.date }}</td>
+            <td>
+                {% if i.reply %}{{ i.reply }}{% else %}N/A{% endif %}                
+            </td>                
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
+{% endblock content %}

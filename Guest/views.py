@@ -11,7 +11,7 @@ def Registration(request):
     if request.method=="POST":
         pl=tbl_place.objects.get(id=request.POST.get("sel_place"))
         tbl_user.objects.create(reg_name=request.POST.get("reg_name"),reg_email=request.POST.get("reg_email"),reg_contact=request.POST.get("reg_contact"),reg_password=request.POST.get("reg_password"),reg_address=request.POST.get("reg_address"),user_photo=request.FILES.get("file_photo"),place=pl)
-        return redirect('Guest:Login')
+        return redirect('Guest:login')
     else:
         return render(request,'Guest/Registration.html',{'dis':dis})
        

@@ -351,7 +351,7 @@
 
             </div>
             <div class="product-size">
-                <select name="sel_size" id="sel_size" class="size" required alt="{{i.id}}">
+                <select name="sel_size" id="sel_size" class="size" alt="{{i.id}}">
                     <option value="">...Select...</option>
                     {% for s in i.product.tbl_productsize_set.all %}
                 <option value="{{s.size.id}}" {% if i.size == s.size %} selected {% endif %}>{{s.size.size_name}}</option>
@@ -377,7 +377,12 @@
             </div>
             <button type="submit" class="checkout" name="btn_checkout">Checkout</button>
 
-
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location = "{% url 'User:Mycart' %}";
+</script>
+{% endif %}
         </form>
          <!-- partial -->
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

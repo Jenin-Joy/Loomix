@@ -224,3 +224,17 @@ def logout(request):
 def viewbooking(request):
     rel=tbl_booking.objects.filter(booking_status__gt=0)
     return render(request,"Admin/viewbooking.html",{'rel':rel})
+
+def viewcomplaint(request):
+    complaint = tbl_complaint.objects.all()
+    return render(request,"Admin/viewcomplaint.html",{"complaint":complaint})
+
+def reply(request,id):
+    if request.method=="POST":
+        complaint = tbl_complaint.objects.get(id=id)
+        complaint.reply = request.POST.get("reply")
+        complaint.status = 1
+        complaint.save()
+        return redirect("Admin:viewcomplaint")
+    else:
+        return render(request,"Admin/reply.html")

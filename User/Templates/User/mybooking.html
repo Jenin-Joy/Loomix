@@ -113,7 +113,11 @@
                     <td>{{ cart.product.product_name }}</td>
                     <td>{{ cart.product.product_price }}</td>
                     <td>{{ cart.cart_quantity }}</td>
-                    <td>{{ cart.size.size_name }}</td>
+                    <td>
+                        {% if cart.size %}
+                        {{ cart.size.size_name }}
+                        {% else %}No Size{% endif %}
+                    </td>
                     <td><a href="{% url 'User:rating' cart.product.id %}" class="rate-link">Rate</a></td>
                 </tr>
                 {% endfor %}

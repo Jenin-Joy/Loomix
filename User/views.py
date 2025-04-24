@@ -47,6 +47,11 @@ def viewproduct(request):
     product=tbl_product.objects.all()
     categorys=tbl_category.objects.all()
     for i in product:
+        wishlistcount = tbl_wishlist.objects.filter(user=request.session["uid"],product=i.id).count()
+        if wishlistcount > 0:
+            i.wishlist = True
+        else:
+            i.wishlist = False
         total_stock = tbl_stock.objects.filter(product=i.id).aggregate(total=Sum('stock_quantity'))['total']
         total_cart = tbl_cart.objects.filter(product=i.id, cart_status=0).aggregate(total=Sum('cart_quantity'))['total']
         # print(total_stock)
@@ -101,28 +106,29 @@ def Mycart(request):
     if request.method=="POST":
         bookingdata=tbl_booking.objects.get(id=request.session["bookingid"])
         cart = tbl_cart.objects.filter(booking=bookingdata)
+        flage = 0
         for i in cart:
-            i.cart_status = 1
-            i.save()
-        bookingdata.booking_amount=request.POST.get("carttotalamt")
-        bookingdata.booking_status=1
-        bookingdata.save()
-        return redirect("User:payment",request.session["bookingid"])
+            sizecount = tbl_productsize.objects.filter(product=i.product.id).count()
+            if sizecount > 0:
+                if i.size is None:
+                    flage += 1
+        if flage > 0:
+            return render(request,"User/MyCart.html",{'msg':'Please Select Size'})
+        else:
+            for i in cart:
+                i.cart_status = 1
+                i.save()
+            bookingdata.booking_amount=request.POST.get("carttotalamt")
+            bookingdata.booking_status=1
+            bookingdata.save()
+            return redirect("User:payment",request.session["bookingid"])
     else:
         bookcount = tbl_booking.objects.filter(user=request.session["uid"],booking_status=0).count()
-        
         if bookcount > 0:
             book = tbl_booking.objects.get(user=request.session["uid"],booking_status=0)
             request.session["bookingid"] = book.id
             cart = tbl_cart.objects.filter(booking=book)
-           
-
-
-            
             for i in cart:
-               
-                # print(rate.rate_amount)
-                
                 total_stock = tbl_stock.objects.filter(product=i.product.id).aggregate(total=Sum('stock_quantity'))['total']
                 total_cart = tbl_cart.objects.filter(product=i.product.id, cart_status=0).aggregate(total=Sum('cart_quantity'))['total']
                 # print(total_stock)
@@ -177,7 +183,7 @@ def paymentsuc(request):
     return render(request,"User/Payment_suc.html")
 
 def mybooking(request):
-    book = tbl_booking.objects.filter(user=request.session["uid"])
+    book = tbl_booking.objects.filter(user=request.session["uid"],booking_status__gt=0)
     return render(request, "User/mybooking.html",{"book":book})
 
 def rating(request,mid):
@@ -242,6 +248,22 @@ def ajaxproduct(request):
     if request.GET.get("did") != "" and request.GET.get("search") != "":
         product = tbl_product.objects.filter(category=request.GET.get("did"),product_name__icontains=request.GET.get("search"))
         for i in product:
+            total_stock = tbl_stock.objects.filter(product=i.id).aggregate(total=Sum('stock_quantity'))['total']
+            total_cart = tbl_cart.objects.filter(product=i.id, cart_status=0).aggregate(total=Sum('cart_quantity'))['total']
+            # print(total_stock)
+            # print(total_cart)
+            if total_stock is None:
+                total_stock = 0
+            if total_cart is None:
+                total_cart = 0
+            total =  total_stock - total_cart
+            i.total_stock = total
+
+            wishlistcount = tbl_wishlist.objects.filter(user=request.session["uid"],product=i.id).count()
+            if wishlistcount > 0:
+                i.wishlist = True
+            else:
+                i.wishlist = False
             tot=0
             ratecount=tbl_rating.objects.filter(product=i.id).count()
             if ratecount>0:
@@ -258,6 +280,22 @@ def ajaxproduct(request):
     elif request.GET.get("did") != "":
         product = tbl_product.objects.filter(category=request.GET.get("did"))
         for i in product:
+            total_stock = tbl_stock.objects.filter(product=i.id).aggregate(total=Sum('stock_quantity'))['total']
+            total_cart = tbl_cart.objects.filter(product=i.id, cart_status=0).aggregate(total=Sum('cart_quantity'))['total']
+            # print(total_stock)
+            # print(total_cart)
+            if total_stock is None:
+                total_stock = 0
+            if total_cart is None:
+                total_cart = 0
+            total =  total_stock - total_cart
+            i.total_stock = total
+
+            wishlistcount = tbl_wishlist.objects.filter(user=request.session["uid"],product=i.id).count()
+            if wishlistcount > 0:
+                i.wishlist = True
+            else:
+                i.wishlist = False
             tot=0
             ratecount=tbl_rating.objects.filter(product=i.id).count()
             if ratecount>0:
@@ -274,6 +312,23 @@ def ajaxproduct(request):
     elif request.GET.get("search") != "":
         product = tbl_product.objects.filter(product_name__icontains=request.GET.get("search"))
         for i in product:
+            total_stock = tbl_stock.objects.filter(product=i.id).aggregate(total=Sum('stock_quantity'))['total']
+            total_cart = tbl_cart.objects.filter(product=i.id, cart_status=0).aggregate(total=Sum('cart_quantity'))['total']
+            # print(total_stock)
+            # print(total_cart)
+            if total_stock is None:
+                total_stock = 0
+            if total_cart is None:
+                total_cart = 0
+            total =  total_stock - total_cart
+            i.total_stock = total
+
+
+            wishlistcount = tbl_wishlist.objects.filter(user=request.session["uid"],product=i.id).count()
+            if wishlistcount > 0:
+                i.wishlist = True
+            else:
+                i.wishlist = False
             tot=0
             ratecount=tbl_rating.objects.filter(product=i.id).count()
             if ratecount>0:
@@ -290,6 +345,23 @@ def ajaxproduct(request):
     else:
         product = tbl_product.objects.all()
         for i in product:
+            total_stock = tbl_stock.objects.filter(product=i.id).aggregate(total=Sum('stock_quantity'))['total']
+            total_cart = tbl_cart.objects.filter(product=i.id, cart_status=0).aggregate(total=Sum('cart_quantity'))['total']
+            # print(total_stock)
+            # print(total_cart)
+            if total_stock is None:
+                total_stock = 0
+            if total_cart is None:
+                total_cart = 0
+            total =  total_stock - total_cart
+            i.total_stock = total
+
+
+            wishlistcount = tbl_wishlist.objects.filter(user=request.session["uid"],product=i.id).count()
+            if wishlistcount > 0:
+                i.wishlist = True
+            else:
+                i.wishlist = False
             tot=0
             ratecount=tbl_rating.objects.filter(product=i.id).count()
             if ratecount>0:
@@ -308,3 +380,44 @@ def ajaxproduct(request):
 def logout(request):
     del request.session["uid"]
     return redirect("Guest:index")
+
+def complaint(request):
+    complaint = tbl_complaint.objects.filter(user=request.session["uid"])
+    if request.method=="POST":
+        tbl_complaint.objects.create(title=request.POST.get("title"),content=request.POST.get("content"),user=tbl_user.objects.get(id=request.session["uid"]))
+        return redirect("User:complaint")
+    else:
+        return render(request,"User/complaint.html",{"complaint":complaint})
+
+def ajaxwishlist(request):
+    wishlistcount = tbl_wishlist.objects.filter(user=request.session["uid"],product=request.GET.get("pid")).count()
+    if wishlistcount > 0:
+        tbl_wishlist.objects.get(user=request.session["uid"],product=request.GET.get("pid")).delete()
+        return JsonResponse({"msg":"Removed From Wish List","status":False})
+    else:
+        tbl_wishlist.objects.create(user=tbl_user.objects.get(id=request.session["uid"]),product=tbl_product.objects.get(id=request.GET.get("pid")))
+        return JsonResponse({"msg":"Added To Wish List","status":True})
+
+def mywishlist(request):
+    wishlist = tbl_wishlist.objects.filter(user=request.session["uid"])
+    for w in wishlist:
+        tot=0
+        ratecount=tbl_rating.objects.filter(product=w.product.id).count()
+        if ratecount>0:
+            ratedata=tbl_rating.objects.filter(product=w.product.id)
+            for j in ratedata:
+                tot=tot+j.rating_data
+                avg=tot//ratecount
+            w.avg=avg
+        else:
+            w.avg=0
+
+        total_stock = tbl_stock.objects.filter(product=w.product.id).aggregate(total=Sum('stock_quantity'))['total']
+        total_cart = tbl_cart.objects.filter(product=w.product.id, cart_status=0).aggregate(total=Sum('cart_quantity'))['total']
+        if total_stock is None:
+            total_stock = 0
+        if total_cart is None:
+            total_cart = 0
+        total =  total_stock - total_cart
+        w.total_stock = total
+    return render(request,"User/MyWishlist.html",{"wishlist":wishlist})

@@ -24,6 +24,11 @@ urlpatterns=[
 
     path('ajaxproduct/',views.ajaxproduct,name="ajaxproduct"),
     path('logout/',views.logout,name="logout"),
+    path('complaint/',views.complaint,name="complaint"),
+    
+    path('ajaxwishlist/',views.ajaxwishlist,name="ajaxwishlist"),
+    
+    path('mywishlist/',views.mywishlist,name="mywishlist"),
 
 ]
 

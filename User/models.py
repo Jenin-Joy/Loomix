@@ -23,3 +23,15 @@ class tbl_rating(models.Model):
     user_review=models.CharField(max_length=500)
     product=models.ForeignKey(tbl_product,on_delete=models.CASCADE)
     datetime=models.DateTimeField(auto_now_add=True)
+
+class tbl_complaint(models.Model):
+    title=models.CharField(max_length=50)
+    content=models.CharField(max_length=500)
+    reply=models.CharField(max_length=500)
+    user=models.ForeignKey(tbl_user,on_delete=models.CASCADE)
+    date=models.DateField(auto_now_add=True)
+    status=models.IntegerField(default=0)
+
+class tbl_wishlist(models.Model):
+    product = models.ForeignKey(tbl_product, on_delete=models.CASCADE)
+    user = models.ForeignKey(tbl_user, on_delete=models.CASCADE)

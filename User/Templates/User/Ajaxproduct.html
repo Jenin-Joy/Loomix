@@ -20,6 +20,16 @@
                 {% endif %}
                 {% endfor %}
             </div>
+            <div class="mt-2 flex flex-wrap gap-2" style="justify-content: space-between;">
+                <div>
+                    {% for s in i.tbl_productsize_set.all %}
+                    <span class="inline-block bg-gray-100 text-gray-700 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-300 hover:bg-blue-100 hover:text-blue-700 transition duration-300">
+                        {{s.size.size_name}}
+                    </span>
+                    {% endfor %}
+                  </div>
+                <i {% if i.wishlist %} class="fa-solid fa-heart text-danger" {% else %} class="fa-regular fa-heart" {% endif %} onclick="addtowishlist('{{i.id}}','wishlist{{i.id}}')" id="wishlist{{i.id}}"></i>
+            </div>
             {% if i.total_stock <= 0 %}
             <div class="block mt-4 w-full bg-red-100 text-red-600 text-center py-2 rounded-md font-semibold border border-red-300">Out of Stock</div>
             {% else %}

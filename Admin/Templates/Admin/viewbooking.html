@@ -42,7 +42,9 @@
                             </td>
                             <td class="py-3 px-4">{{j.product.product_name}}</td>
                             <td class="py-3 px-4">{{j.cart_quantity}}</td>
-                            <td class="py-3 px-4">{{j.size.size_name}}</td>
+                            <td class="py-3 px-4">{% if j.size %}
+                                {{ j.size.size_name }}
+                                {% else %}No Size{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
